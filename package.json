@@ -1,0 +1,23 @@
+{
+  "name": "pw_learning-",
+  "version": "1.0.0",
+  "description": "Learning project",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tetiana13/PW_Learning-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Tetiana13/PW_Learning-/issues"
+  },
+  "homepage": "https://github.com/Tetiana13/PW_Learning-#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.2.0"
+  }
+}
