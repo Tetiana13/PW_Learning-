@@ -4,8 +4,6 @@ import { test, expect } from '@playwright/test';
 test('Login with valid credentials', async ({ page }) => {
 
   await page.goto('https://practicesoftwaretesting.com/auth/login');
-  await page.pause();
-  
   await page.locator('[id="email"]').isVisible();
   
   await page.locator('[id="email"]').fill('customer@practicesoftwaretesting.com');
