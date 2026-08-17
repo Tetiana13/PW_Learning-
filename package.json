@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Learning project",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "npx eslint . --fix"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Tetiana13/PW_Learning-.git"
@@ -17,7 +19,15 @@
   },
   "homepage": "https://github.com/Tetiana13/PW_Learning-#readme",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
-    "@types/node": "^26.2.0"
+    "@types/node": "^26.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.67.0",
+    "@typescript-eslint/parser": "^8.67.0",
+    "eslint": "^10.8.1",
+    "eslint-plugin-playwright": "^2.11.0",
+    "globals": "^17.11.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.67.0"
   }
 }
