@@ -15,7 +15,6 @@ export class HomePage {
     async selectProduct (productName:string): Promise<void> {
         await this.products
             .filter({ hasText: productName })
-            .first()
             .click();
     }
 
