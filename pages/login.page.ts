@@ -14,7 +14,7 @@ export class LoginPage {
         this.passwordField = this.page.getByTestId("password");
         this.submitButton = this.page.getByTestId("login-submit");
     }
-    async performLogin(email:string, password:string): Promise<void> {
+    async performLogin(email: string, password: string): Promise<void> {
         await this.emailField.fill(email);
         await this.passwordField.fill(password);
         
