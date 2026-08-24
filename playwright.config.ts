@@ -19,11 +19,9 @@ export default defineConfig({
  
   use: {
    
-   baseURL: 'https://practicesoftwaretesting.com/auth/login',
-
-    
-
+    baseURL: 'https://practicesoftwaretesting.com/auth/login',
     headless: true,
+    testIdAttribute:'data-test',
   },
 
   /* Configure projects for major browsers */
