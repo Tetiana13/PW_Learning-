@@ -1,6 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../pages/login.page";
 
+const authData = {
+  login: 'customer@practicesoftwaretesting.com',
+  password: 'welcome01',
+};
+
 test('Login with valid credentials', async ({ page }) => {
     const loginPage = new LoginPage(page);
 
