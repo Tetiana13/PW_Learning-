@@ -6,7 +6,7 @@ export class HeaderFragment {
     categoriesButton: Locator;
     contactButton: Locator;
     signInButton: Locator;
-    languageSelectorButton:Locator;
+    languageSelectorButton: Locator;
 
     constructor(page:Page){
         this.page = page;
