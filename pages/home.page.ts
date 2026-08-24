@@ -12,7 +12,7 @@ export class HomePage {
         this.products = this.page.locator('[data-test="product-name"]');
     }
 
-    async selectProduct (productName:string): Promise<void> {
+    async selectProduct (productName: string): Promise<void> {
         await this.products
             .filter({ hasText: productName })
             .click();
