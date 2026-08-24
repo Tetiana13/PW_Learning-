@@ -3,7 +3,7 @@ import { HeaderFragment } from "../fragments/ HeaderFragment";
 
 export class ProductDetailsPage {
 
-page: Page;
+   page: Page;
 headerFragment: HeaderFragment;
 productName: Locator;
 productPrice: Locator;
