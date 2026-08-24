@@ -11,7 +11,8 @@ export class HomePage {
         this.headerFragment = new HeaderFragment(page);
         this.products = this.page.getByTestId("product-name");
     }
-    async selectProduct (productName:string): Promise<void> {
+
+    async selectProduct (productName: string): Promise<void> {
         await this.products
             .filter({ hasText: productName })
             .click();

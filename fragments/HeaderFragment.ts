@@ -10,7 +10,7 @@ export class HeaderFragment {
 
     constructor(page:Page){
         this.page = page;
-        this.homeButton = this.page.locator('[data-test="nav-home"]');
+        this.homeButton = this.page.getByTestId("nav-home");
         this.categoriesButton = this.page.locator('[data-test="nav-categories"]');
         this.contactButton = this.page.locator('[data-test="nav-contact"]');
         this.signInButton = this.page.locator('[data-test="nav-sign-in"]');
