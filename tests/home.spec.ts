@@ -9,7 +9,6 @@ test('Verify user can view product details', async ({ page }) => {
   
     await page.goto('/');
     await homePage.selectProduct(productName);
-
     await expect(page).toHaveURL(/product/);
     await expect(productDetailsPage.productName).toHaveText(productName);
     await expect(productDetailsPage.productPrice).toHaveText('14.15');
