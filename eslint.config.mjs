@@ -11,6 +11,7 @@ export default defineConfig([
             files: ['**/*.{js,ts}'],
             extends: [
             js.configs.recommended,
+            tseslint.configs.recommended,
             tseslint.configs.recommendedTypeChecked,
             ],
             languageOptions: {
@@ -18,6 +19,7 @@ export default defineConfig([
                     projectService: {
                     allowDefaultProject: ['eslint.config.mjs'],
                     },
+                    tsconfigRootDir: import.meta.dirname,
                 },
             },
             rules: {
@@ -34,21 +36,14 @@ export default defineConfig([
                 ],
         },
         {
-            files: ['tests/**'],
-                extends: [playwright.configs['flat/recommended']],
-                rules: {
-                // Customize Playwright rules
-                // ...
-            },
-    },
-    {
-    files: ['tests/**'],
-    extends: [playwright.configs['flat/recommended']],
-    rules: {
-      // Customize Playwright rules
-      // ...
-    },
-  },
+          files: ['tests/**/*.ts'],
+          extends: [playwright.configs['flat/recommended']],
+          rules: {
+            ...playwright.configs['flat/recommended'].rules,
+            // Customize Playwright rules here, for example:
+            // 'playwright/no-skipped-tests': 'warn',
+          },
+        },
 ]);
 
 
