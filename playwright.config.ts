@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import process from 'node:process';
+
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -19,7 +19,7 @@ export default defineConfig({
  
   use: {
    
-    baseURL: 'https://practicesoftwaretesting.com/auth/login',
+    baseURL: 'https://practicesoftwaretesting.com',
     headless: true,
     testIdAttribute:'data-test',
   },
