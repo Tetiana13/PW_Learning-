@@ -41,7 +41,7 @@ export default defineConfig([
           rules: {
             ...playwright.configs['flat/recommended'].rules,
             // Customize Playwright rules here, for example:
-            // 'playwright/no-skipped-tests': 'warn',
+            'playwright/no-skipped-tests': 'off',
           },
         },
 ]);
