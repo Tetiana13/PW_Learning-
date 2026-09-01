@@ -45,7 +45,7 @@ test('Verify user can add product to cart', async ({ page }) => {
   await expect(checkoutPage.proceedToCheckoutButton).toBeVisible();
 });
 
-test('Verify user can perform sorting by name (asc & desc)', async ({ page }) => {
+test('Verify user can perform sorting by name (asc)', async ({ page }) => {
   const sideBarFragments = new SideBarFragments(page);
   const homePage = new HomePage(page);
 
@@ -59,6 +59,14 @@ test('Verify user can perform sorting by name (asc & desc)', async ({ page }) =>
 
   expect(namesAsc).toEqual([...namesAsc].sort((a, b) => a.localeCompare(b)));
 
+});
+
+test('Verify user can perform sorting by name (desc)', async ({ page }) => {
+  const sideBarFragments = new SideBarFragments(page);
+  const homePage = new HomePage(page);
+
+  await page.goto('/');
+
   await sideBarFragments.sortDropdown.selectOption({
     label: 'Name (Z - A)',
   });
@@ -68,7 +76,22 @@ test('Verify user can perform sorting by name (asc & desc)', async ({ page }) =>
   expect(namesDesc).toEqual([...namesDesc].sort((a, b) => b.localeCompare(a)));
 });
 
-test('Verify user can perform sorting by price (asc & desc)', async ({ page }) => {
+test('Verify user can perform sorting by price (asc)', async ({ page }) => {
+  const sideBarFragments = new SideBarFragments(page);
+  const homePage = new HomePage(page);
+
+  await page.goto('/');
+
+  await sideBarFragments.sortDropdown.selectOption({
+    label: 'Price (Low - High)',
+  });
+
+  const pricesLowHigh = await homePage.getProductPrices();
+
+  expect(pricesLowHigh).toEqual([...pricesLowHigh].sort((a, b) => a - b));
+});
+
+test('Verify user can perform sorting by price (desc)', async ({ page }) => {
   const sideBarFragments = new SideBarFragments(page);
   const homePage = new HomePage(page);
 
@@ -80,14 +103,6 @@ test('Verify user can perform sorting by price (asc & desc)', async ({ page }) =
   const pricesHighLow = await homePage.getProductPrices();
 
   expect(pricesHighLow).toEqual([...pricesHighLow].sort((a, b) => b - a));
-
-  await sideBarFragments.sortDropdown.selectOption({
-    label: 'Price (Low - High)',
-  });
-
-  const pricesLowHigh = await homePage.getProductPrices();
-
-  expect(pricesLowHigh).toEqual([...pricesLowHigh].sort((a, b) => a - b));
 });
 
 test('Verify user can filter products by category', async ({ page }) => {
