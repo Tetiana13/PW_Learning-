@@ -1,18 +1,6 @@
 import { expect, test } from '@playwright/test';
-import fs from 'fs';
-import path from 'path';
 import { LoginPage } from '../pages/login.page';
-
-const authFile = path.join(__dirname, '../playwright/.auth/user.json');
-const authDir = path.dirname(authFile);
-
-if (!fs.existsSync(authDir)) {
-  fs.mkdirSync(authDir, { recursive: true });
-}
-
-if (!fs.existsSync(authFile)) {
-  fs.writeFileSync(authFile, JSON.stringify({ cookies: [], origins: [] }, null, 2));
-}
+import { authFile } from '../utils/auth';
 
 const authData = {
   login: 'customer@practicesoftwaretesting.com',

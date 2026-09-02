@@ -45,64 +45,58 @@ test('Verify user can add product to cart', async ({ page }) => {
   await expect(checkoutPage.proceedToCheckoutButton).toBeVisible();
 });
 
-test('Verify user can perform sorting by name (asc)', async ({ page }) => {
-  const sideBarFragments = new SideBarFragments(page);
-  const homePage = new HomePage(page);
+const nameSortingOptions = [
+  { label: 'Name (A - Z)', direction: 'asc' },
+  { label: 'Name (Z - A)', direction: 'desc' },
+];
 
-  await page.goto('/');
+nameSortingOptions.forEach(({ label, direction }) => {
+  test(`Verify user can perform sorting by name ${label}`, async ({ page }) => {
+    const sideBarFragments = new SideBarFragments(page);
+    const homePage = new HomePage(page);
 
-  await sideBarFragments.sortDropdown.selectOption({
-    label: 'Name (A - Z)',
+    await page.goto('/');
+
+    await sideBarFragments.sortDropdown.selectOption({
+      label,
+    });
+
+    const names = await homePage.getProductNames();
+
+    const sortedNames = [...names].sort((a, b) =>
+      direction === 'asc'
+        ? a.localeCompare(b)
+        : b.localeCompare(a),
+    );
+
+    expect(names).toEqual(sortedNames);
   });
-
-  const namesAsc = await homePage.getProductNames();
-
-  expect(namesAsc).toEqual([...namesAsc].sort((a, b) => a.localeCompare(b)));
-
 });
 
-test('Verify user can perform sorting by name (desc)', async ({ page }) => {
-  const sideBarFragments = new SideBarFragments(page);
-  const homePage = new HomePage(page);
+const priceSortingOptions = [
+  { label: 'Price (Low - High)', direction: 'asc' },
+  { label: 'Price (High - Low)', direction: 'desc' },
+];
 
-  await page.goto('/');
+priceSortingOptions.forEach(({ label, direction }) => {
+  test(`Verify user can perform sorting by price ${label}`, async ({ page }) => {
+    const sideBarFragments = new SideBarFragments(page);
+    const homePage = new HomePage(page);
 
-  await sideBarFragments.sortDropdown.selectOption({
-    label: 'Name (Z - A)',
+    await page.goto('/');
+
+    await sideBarFragments.sortDropdown.selectOption({
+      label,
+    });
+
+    const prices = await homePage.getProductPrices();
+
+    const sortedPrices = [...prices].sort((a, b) =>
+      direction === 'asc' ? a - b : b - a,
+    );
+
+    expect(prices).toEqual([...sortedPrices].sort((a, b) => a - b));
   });
-
-  const namesDesc = await homePage.getProductNames();
-
-  expect(namesDesc).toEqual([...namesDesc].sort((a, b) => b.localeCompare(a)));
-});
-
-test('Verify user can perform sorting by price (asc)', async ({ page }) => {
-  const sideBarFragments = new SideBarFragments(page);
-  const homePage = new HomePage(page);
-
-  await page.goto('/');
-
-  await sideBarFragments.sortDropdown.selectOption({
-    label: 'Price (Low - High)',
-  });
-
-  const pricesLowHigh = await homePage.getProductPrices();
-
-  expect(pricesLowHigh).toEqual([...pricesLowHigh].sort((a, b) => a - b));
-});
-
-test('Verify user can perform sorting by price (desc)', async ({ page }) => {
-  const sideBarFragments = new SideBarFragments(page);
-  const homePage = new HomePage(page);
-
-  await page.goto('/');
-
-  await sideBarFragments.sortDropdown.selectOption({
-    label: 'Price (High - Low)',
-  });
-  const pricesHighLow = await homePage.getProductPrices();
-
-  expect(pricesHighLow).toEqual([...pricesHighLow].sort((a, b) => b - a));
 });
 
 test('Verify user can filter products by category', async ({ page }) => {

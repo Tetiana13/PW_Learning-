@@ -1,18 +1,7 @@
 import { expect, test } from '@playwright/test';
-import fs from 'fs';
-import path from 'path';
 import { LoginPage } from '../pages/login.page';
-
-const authFile = path.join(__dirname, '../playwright/.auth/user.json');
-const authDir = path.dirname(authFile);
-
-if (!fs.existsSync(authDir)) {
-  fs.mkdirSync(authDir, { recursive: true });
-}
-
-if (!fs.existsSync(authFile)) {
-  fs.writeFileSync(authFile, JSON.stringify({ cookies: [], origins: [] }, null, 2));
-}
+import { MyAccountPage } from '../pages/account.page';
+import { authFile } from '../utils/auth';
 
 const authData = {
   login: 'customer@practicesoftwaretesting.com',
@@ -25,11 +14,12 @@ test.use({ storageState: authFile });
 
 test('Login with valid credentials', async ({ page }) => {
   const loginPage = new LoginPage(page);
+  const myAccountPage = new MyAccountPage(page);
 
   await page.goto('/auth/login');
   await loginPage.performLogin(authData.login, authData.password);
   await expect(page).toHaveURL('/account');
-  await expect(page.getByTestId('page-title')).toHaveText('My account');
-  await expect(page.getByText('Jane Doe')).toBeVisible();
+  await expect(myAccountPage.pageTitle).toHaveText('My account');
+  await expect(myAccountPage.userName).toBeVisible();
   await page.context().storageState({ path: authFile });
 });
