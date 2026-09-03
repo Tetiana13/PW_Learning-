@@ -1,19 +1,23 @@
 import { Locator, Page } from '@playwright/test';
 
 export class HeaderFragment {
-    page: Page;
-    homeButton: Locator;
-    categoriesButton: Locator;
-    contactButton: Locator;
-    signInButton: Locator;
-    languageSelectorButton: Locator;
+  page: Page;
+  homeButton: Locator;
+  categoriesButton: Locator;
+  contactButton: Locator;
+  signInButton: Locator;
+  languageSelectorButton: Locator;
+  cartButton: Locator;
+  cartQuantity: Locator;
 
-    constructor(page:Page){
-        this.page = page;
-        this.homeButton = this.page.getByTestId("nav-home");
-        this.categoriesButton = this.page.getByTestId("nav-categories");
-        this.contactButton = this.page.getByTestId("nav-contact");
-        this.signInButton = this.page.getByTestId("nav-sign-in");
-        this.languageSelectorButton = this.page.getByTestId("language-select");
-    }
+  constructor(page: Page) {
+    this.page = page;
+    this.homeButton = this.page.getByTestId('nav-home');
+    this.categoriesButton = this.page.getByTestId('nav-categories');
+    this.contactButton = this.page.getByTestId('nav-contact');
+    this.signInButton = this.page.getByTestId('nav-sign-in');
+    this.languageSelectorButton = this.page.getByTestId('language-select');
+    this.cartButton = this.page.getByTestId('nav-cart');
+    this.cartQuantity = this.page.getByTestId('cart-quantity');
+  }
 }
