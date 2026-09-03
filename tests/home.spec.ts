@@ -95,7 +95,7 @@ priceSortingOptions.forEach(({ label, direction }) => {
       direction === 'asc' ? a - b : b - a,
     );
 
-    expect(prices).toEqual([...sortedPrices].sort((a, b) => a - b));
+    expect(prices).toEqual(sortedPrices);
   });
 });
 
