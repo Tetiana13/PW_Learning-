@@ -1,6 +1,5 @@
-import { expect, test } from '@playwright/test';
-import { LoginPage } from '../pages/login.page';
-import { MyAccountPage } from '../pages/account.page';
+import { expect, test } from '../fixtures/app.fixtures';
+
 import { authFile } from '../utils/auth';
 
 const authData = {
@@ -10,16 +9,14 @@ const authData = {
 
 test.skip(!!process.env.CI, 'Skip on CI due to Cloudflare verification');
 
-test.use({ storageState: authFile });
+test('Login with valid credentials', async ({ app }) => {
+  await app.page.goto('/auth/login');
 
-test('Login with valid credentials', async ({ page }) => {
-  const loginPage = new LoginPage(page);
-  const myAccountPage = new MyAccountPage(page);
+  await app.loginPage.performLogin(authData.login, authData.password);
 
-  await page.goto('/auth/login');
-  await loginPage.performLogin(authData.login, authData.password);
-  await expect(page).toHaveURL('/account');
-  await expect(myAccountPage.pageTitle).toHaveText('My account');
-  await expect(myAccountPage.userName).toBeVisible();
-  await page.context().storageState({ path: authFile });
+  await expect(app.page).toHaveURL('/account');
+  await expect(app.myAccountPage.pageTitle).toHaveText('My account');
+  await expect(app.myAccountPage.userName).toBeVisible();
+
+  await app.page.context().storageState({ path: authFile });
 });

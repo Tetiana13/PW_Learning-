@@ -6,6 +6,8 @@ export class CheckoutPage {
   headerFragment: HeaderFragment;
   getProductRow: Locator;
   productTitle: Locator;
+  productPrice: Locator;
+  totalPrice: Locator;
   proceedToCheckoutButton: Locator;
 
   constructor(page: Page) {
@@ -13,7 +15,9 @@ export class CheckoutPage {
     this.headerFragment = new HeaderFragment(page);
     this.getProductRow = this.page.locator('table tbody tr');
     this.productTitle = this.page.getByTestId('product-title');
-    this.proceedToCheckoutButton = this.page.getByTestId('proceed-1');
+    this.productPrice = this.page.getByTestId('product-price');
+    this.proceedToCheckoutButton = this.page.getByTestId('/proceed-d+/);');
+    this.totalPrice = this.page.getByTestId('cart-total');
   }
 
   async verifyProductQuantity(productName: string, quantity: number) {
@@ -21,4 +25,15 @@ export class CheckoutPage {
 
     await expect(row.getByTestId('product-quantity')).toHaveValue(String(quantity));
   }
+  async verifyProduct(productName: string, productPrice: string) {
+    await expect(this.productTitle).toHaveText(productName);
+    await expect(this.productPrice).toHaveText(productPrice);
+  }
+
+  async verifyTotalEqualsProductPrice() {
+    await expect(this.totalPrice).toHaveText(
+    await this.productPrice.innerText(),
+  );
+}
+  
 }
