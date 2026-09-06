@@ -17,7 +17,7 @@ export const test = base.extend<Fixtures>({
     users.customer_1.login,
     users.customer_1.password,
   );
-
+  await expect(app.page).toHaveURL('/account');
   await use(app);
 },
 });
