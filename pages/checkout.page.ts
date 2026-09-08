@@ -1,7 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { HeaderFragment } from '../fragments/HeaderFragment';
-import { PaymentMethod } from '../data/payment';
-import { testCard } from '../data/payment';
+import { PaymentMethod, testCard } from '../data/payment';
 
 export class CheckoutPage {
   page: Page;
@@ -30,7 +29,7 @@ export class CheckoutPage {
     this.getProductRow = this.page.locator('table tbody tr');
     this.productTitle = this.page.getByTestId('product-title');
     this.productPrice = this.page.getByTestId('product-price');
-    this.proceedToCheckoutButton = this.page.locator('[data-test^="proceed-"]:not([disabled])');
+    this.proceedToCheckoutButton = this.page.getByTestId('proceed-1');
     this.totalPrice = this.page.getByTestId('cart-total');
     this.billingCountry = this.page.getByTestId('country');
     this.billingPostCode = this.page.getByTestId('postal_code');
@@ -44,9 +43,8 @@ export class CheckoutPage {
     this.paymentConfirmButton = this.page.getByTestId('finish');
     this.paymentSuccessMessage = this.page.getByTestId('payment-success-message');
     this.alreadyLoggedInMessage = this.page.getByText(
-  'you are already logged in. You can proceed to checkout.',
-);
-
+      'you are already logged in. You can proceed to checkout.',
+    );
   }
 
   async verifyProductQuantity(productName: string, quantity: number) {
@@ -54,15 +52,14 @@ export class CheckoutPage {
 
     await expect(row.getByTestId('product-quantity')).toHaveValue(String(quantity));
   }
+
   async verifyProduct(productName: string, productPrice: string) {
     await expect(this.productTitle).toHaveText(productName);
     await expect(this.productPrice).toHaveText(productPrice);
   }
 
   async verifyTotalEqualsProductPrice() {
-    await expect(this.totalPrice).toHaveText(
-    await this.productPrice.innerText(),
-  );
+    await expect(this.totalPrice).toHaveText(await this.productPrice.innerText());
   }
 
   async clickProceed(step: number) {
@@ -78,26 +75,17 @@ export class CheckoutPage {
   }
 
   async selectPaymentMethod(method: PaymentMethod): Promise<void> {
-  await this.paymentMethodDropdown.selectOption(method);
+    await this.paymentMethodDropdown.selectOption(method);
   }
-
 
   async fillPaymentDetails(): Promise<void> {
     await this.paymentCreditCardNumber.fill(testCard.cardNumber);
-
-    await this.paymentExpirationDate.fill(
-      testCard.getExpirationDate()
-    );
-
+    await this.paymentExpirationDate.fill(testCard.expirationDate);
     await this.paymentCVV.fill(testCard.cvv);
-
-    await this.paymentCardHolderName.fill(
-      testCard.cardHolderName
-    );
+    await this.paymentCardHolderName.fill(testCard.cardHolderName);
   }
 
   async verifyPaymentSuccess(): Promise<void> {
-  await expect(this.paymentSuccessMessage).toHaveText('Payment was successful');
+    await expect(this.paymentSuccessMessage).toHaveText('Payment was successful');
   }
-  
 }

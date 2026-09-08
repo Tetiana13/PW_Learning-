@@ -12,7 +12,6 @@ export class App {
   homePage: HomePage;
   checkoutPage: CheckoutPage;
   productDetailsPage: ProductDetailsPage;
-  
 
   constructor(page: Page) {
     this.page = page;

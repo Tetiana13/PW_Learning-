@@ -1,9 +1,7 @@
 import { expect, test } from '../fixtures/app.fixtures';
 import { PowerTools } from '../data/categories';
 
-
 test('Verify user can view product details', async ({ app }) => {
-
   const productName = 'Combination Pliers';
 
   await app.page.goto('/');
@@ -16,7 +14,6 @@ test('Verify user can view product details', async ({ app }) => {
 });
 
 test('Verify user can add product to cart', async ({ app }) => {
-
   const productName = 'Slip Joint Pliers';
 
   await app.page.goto('/');
@@ -35,6 +32,7 @@ test('Verify user can add product to cart', async ({ app }) => {
 
   await app.checkoutPage.verifyProductQuantity(productName, 1);
   await expect(app.checkoutPage.proceedToCheckoutButton).toBeVisible();
+  await expect(app.checkoutPage.proceedToCheckoutButton).toBeEnabled();
 });
 
 const nameSortingOptions = [
@@ -44,7 +42,6 @@ const nameSortingOptions = [
 
 nameSortingOptions.forEach(({ label, direction }) => {
   test(`Verify user can perform sorting by name ${label}`, async ({ app }) => {
-
     await app.page.goto('/');
 
     await app.homePage.sideBarFragment.sortDropdown.selectOption({
@@ -54,9 +51,7 @@ nameSortingOptions.forEach(({ label, direction }) => {
     const names = await app.homePage.getProductNames();
 
     const sortedNames = [...names].sort((a, b) =>
-      direction === 'asc'
-        ? a.localeCompare(b)
-        : b.localeCompare(a),
+      direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
     );
 
     expect(names).toEqual(sortedNames);
@@ -70,7 +65,6 @@ const priceSortingOptions = [
 
 priceSortingOptions.forEach(({ label, direction }) => {
   test(`Verify user can perform sorting by price ${label}`, async ({ app }) => {
-
     await app.page.goto('/');
 
     await app.homePage.sideBarFragment.sortDropdown.selectOption({
@@ -88,7 +82,6 @@ priceSortingOptions.forEach(({ label, direction }) => {
 });
 
 test('Verify user can filter products by category', async ({ app }) => {
-
   await app.page.goto('/');
   await app.homePage.selectPowerTool(PowerTools.Sander);
 
