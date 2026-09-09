@@ -6,6 +6,14 @@ export enum PaymentMethod {
   GiftCard = 'gift-card',
 }
 
+function getExpirationDate(): string {
+  const expirationDate = new Date();
+  expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+
+  const month = String(expirationDate.getMonth() + 1).padStart(2, '0');
+  return `${month}/${expirationDate.getFullYear()}`;
+}
+
 export const testCard = {
   cardNumber: '1111-1111-1111-1111',
   cvv: '111',
