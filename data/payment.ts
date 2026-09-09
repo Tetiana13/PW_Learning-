@@ -10,5 +10,5 @@ export const testCard = {
   cardNumber: '1111-1111-1111-1111',
   cvv: '111',
   cardHolderName: 'Test User',
-  expirationDate: '12/2026',
+  expirationDate: getExpirationDate(),
 };
