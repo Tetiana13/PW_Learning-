@@ -1,48 +1,38 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures/app.fixtures';
 import { PowerTools } from '../data/categories';
-import { HeaderFragment } from '../fragments/HeaderFragment';
-import { SideBarFragments } from '../fragments/SideBarFragments';
-import { CheckoutPage } from '../pages/checkout.page';
-import { HomePage } from '../pages/home.page';
-import { ProductDetailsPage } from '../pages/productDetails.page';
 
-test('Verify user can view product details', async ({ page }) => {
-  const homePage = new HomePage(page);
-  const productDetailsPage = new ProductDetailsPage(page);
+test('Verify user can view product details', async ({ app }) => {
   const productName = 'Combination Pliers';
 
-  await page.goto('/');
-  await homePage.selectProduct(productName);
-  await expect(page).toHaveURL(/product/);
-  await expect(productDetailsPage.productName).toHaveText(productName);
-  await expect(productDetailsPage.productPrice).toHaveText('14.15');
-  await expect(productDetailsPage.addToCartButton).toBeVisible();
-  await expect(productDetailsPage.addToFavoriteButton).toBeVisible();
+  await app.page.goto('/');
+  await app.homePage.selectProduct(productName);
+  await expect(app.page).toHaveURL(/product/);
+  await expect(app.productDetailsPage.productName).toHaveText(productName);
+  await expect(app.productDetailsPage.productPrice).toHaveText('14.15');
+  await expect(app.productDetailsPage.addToCartButton).toBeVisible();
+  await expect(app.productDetailsPage.addToFavoriteButton).toBeVisible();
 });
 
-test('Verify user can add product to cart', async ({ page }) => {
-  const homePage = new HomePage(page);
-  const productDetailsPage = new ProductDetailsPage(page);
-  const headerFragment = new HeaderFragment(page);
-  const checkoutPage = new CheckoutPage(page);
+test('Verify user can add product to cart', async ({ app }) => {
   const productName = 'Slip Joint Pliers';
 
-  await page.goto('/');
-  await homePage.selectProduct(productName);
-  await expect(productDetailsPage.productName).toHaveText(productName);
-  await expect(productDetailsPage.productPrice).toHaveText('9.17');
-  await productDetailsPage.addToCartButton.click();
+  await app.page.goto('/');
+  await app.homePage.selectProduct(productName);
+  await expect(app.productDetailsPage.productName).toHaveText(productName);
+  await expect(app.productDetailsPage.productPrice).toHaveText('9.17');
+  await app.productDetailsPage.addToCartButton.click();
 
-  await expect(productDetailsPage.addToCartNotification).toHaveText(
+  await expect(app.productDetailsPage.addToCartNotification).toHaveText(
     'Product added to shopping cart.',
   );
-  await expect(productDetailsPage.addToCartNotification).toBeHidden({ timeout: 8000 });
-  await expect(headerFragment.cartQuantity).toHaveText('1');
-  await headerFragment.cartButton.click();
-  await expect(page).toHaveURL('/checkout');
+  await expect(app.productDetailsPage.addToCartNotification).toBeHidden({ timeout: 8000 });
+  await expect(app.productDetailsPage.headerFragment.cartQuantity).toHaveText('1');
+  await app.productDetailsPage.headerFragment.cartButton.click();
+  await expect(app.page).toHaveURL('/checkout');
 
-  await checkoutPage.verifyProductQuantity(productName, 1);
-  await expect(checkoutPage.proceedToCheckoutButton).toBeVisible();
+  await app.checkoutPage.verifyProductQuantity(productName, 1);
+  await expect(app.checkoutPage.proceedToCheckoutButton).toBeVisible();
+  await expect(app.checkoutPage.proceedToCheckoutButton).toBeEnabled();
 });
 
 const nameSortingOptions = [
@@ -51,22 +41,17 @@ const nameSortingOptions = [
 ];
 
 nameSortingOptions.forEach(({ label, direction }) => {
-  test(`Verify user can perform sorting by name ${label}`, async ({ page }) => {
-    const sideBarFragments = new SideBarFragments(page);
-    const homePage = new HomePage(page);
+  test(`Verify user can perform sorting by name ${label}`, async ({ app }) => {
+    await app.page.goto('/');
 
-    await page.goto('/');
-
-    await sideBarFragments.sortDropdown.selectOption({
+    await app.homePage.sideBarFragment.sortDropdown.selectOption({
       label,
     });
 
-    const names = await homePage.getProductNames();
+    const names = await app.homePage.getProductNames();
 
     const sortedNames = [...names].sort((a, b) =>
-      direction === 'asc'
-        ? a.localeCompare(b)
-        : b.localeCompare(a),
+      direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
     );
 
     expect(names).toEqual(sortedNames);
@@ -79,17 +64,14 @@ const priceSortingOptions = [
 ];
 
 priceSortingOptions.forEach(({ label, direction }) => {
-  test(`Verify user can perform sorting by price ${label}`, async ({ page }) => {
-    const sideBarFragments = new SideBarFragments(page);
-    const homePage = new HomePage(page);
+  test(`Verify user can perform sorting by price ${label}`, async ({ app }) => {
+    await app.page.goto('/');
 
-    await page.goto('/');
-
-    await sideBarFragments.sortDropdown.selectOption({
+    await app.homePage.sideBarFragment.sortDropdown.selectOption({
       label,
     });
 
-    const prices = await homePage.getProductPrices();
+    const prices = await app.homePage.getProductPrices();
 
     const sortedPrices = [...prices].sort((a, b) =>
       direction === 'asc' ? a - b : b - a,
@@ -99,14 +81,12 @@ priceSortingOptions.forEach(({ label, direction }) => {
   });
 });
 
-test('Verify user can filter products by category', async ({ page }) => {
-  const homePage = new HomePage(page);
-
-  await page.goto('/');
-  await homePage.selectPowerTool(PowerTools.Sander);
+test('Verify user can filter products by category', async ({ app }) => {
+  await app.page.goto('/');
+  await app.homePage.selectPowerTool(PowerTools.Sander);
 
   await expect.poll(async () => {
-    const productNames = await homePage.getProductNames();
+    const productNames = await app.homePage.getProductNames();
     return productNames.every((name) => name.includes(PowerTools.Sander));
   }).toBeTruthy();
 });

@@ -2,22 +2,24 @@
   "baseUrl": "./",
   "compilerOptions": {
     /* Language and Environment */
-    "target": "es2016", 
-    
+    "target": "es2016",
+
     /* Modules */
-    "module": "commonjs", 
-    
-    "resolveJsonModule": true, 
-    "allowSyntheticDefaultImports": true, 
-    "esModuleInterop": true, 
+    "module": "commonjs",
+
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    
+
     /* Type Checking */
-    "strict": true, 
-    "noEmit": true, 
+    "strict": true,
+    "noEmit": true,
+
     /* Completeness */
     "skipLibCheck": true,
-     "types": ["node"] 
+    "types": ["node"]
   },
   "include": ["**/*.ts"]
 }
+
