@@ -18,8 +18,13 @@ export const test = base.extend<Fixtures>({
   },
 
   loggedInApp: async ({ app, request }, use) => {
+    const apiUrl = process.env.API_URL;
+    if (!apiUrl) {
+      throw new Error('API_URL environment variable is required to log in');
+    }
+
     const response = await request.post(
-      `${process.env.API_URL}/users/login`,
+      `${apiUrl}/users/login`,
       {
         data: {
           email: users.customer_1.login,
