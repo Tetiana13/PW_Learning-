@@ -48,13 +48,20 @@ nameSortingOptions.forEach(({ label, direction }) => {
       label,
     });
 
-    const names = await app.homePage.getProductNames();
+    await expect
+      .poll(async () => {
+        const names = await app.homePage.getProductNames();
+        if (names.length === 0) {
+          return false;
+        }
 
-    const sortedNames = [...names].sort((a, b) =>
-      direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
-    );
+        const sortedNames = [...names].sort((a, b) =>
+          direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
+        );
 
-    expect(names).toEqual(sortedNames);
+        return names.every((name, index) => name === sortedNames[index]);
+      })
+      .toBe(true);
   });
 });
 
@@ -71,13 +78,20 @@ priceSortingOptions.forEach(({ label, direction }) => {
       label,
     });
 
-    const prices = await app.homePage.getProductPrices();
+    await expect
+      .poll(async () => {
+        const prices = await app.homePage.getProductPrices();
+        if (prices.length === 0 || prices.some(Number.isNaN)) {
+          return false;
+        }
 
-    const sortedPrices = [...prices].sort((a, b) =>
-      direction === 'asc' ? a - b : b - a,
-    );
+        const sortedPrices = [...prices].sort((a, b) =>
+          direction === 'asc' ? a - b : b - a,
+        );
 
-    expect(prices).toEqual(sortedPrices);
+        return prices.every((price, index) => price === sortedPrices[index]);
+      })
+      .toBe(true);
   });
 });
 

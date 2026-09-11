@@ -43,6 +43,7 @@ export const test = base.extend<Fixtures>({
       localStorage.setItem('auth-token', token);
     }, token);
 
+    await app.page.reload();
     await app.page.goto('/account');
 
     await expect(app.page).toHaveURL('/account');
