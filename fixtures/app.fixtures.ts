@@ -37,16 +37,14 @@ export const test = base.extend<Fixtures>({
     const jsonData = (await response.json()) as LoginResponse;
     const token = jsonData.access_token;
 
-    await app.page.goto('/');
-
-    await app.page.evaluate((token) => {
+    await app.page.addInitScript((token) => {
       localStorage.setItem('auth-token', token);
     }, token);
 
-    await app.page.reload();
-    await app.page.goto('/account');
+    await app.page.goto('/account', { waitUntil: 'domcontentloaded' });
 
     await expect(app.page).toHaveURL('/account');
+    await expect(app.myAccountPage.pageTitle).toHaveText('My account');
 
     await use(app);
   },

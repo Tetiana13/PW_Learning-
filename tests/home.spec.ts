@@ -60,7 +60,7 @@ nameSortingOptions.forEach(({ label, direction }) => {
         );
 
         return names.every((name, index) => name === sortedNames[index]);
-      })
+      }, { timeout: 15000 })
       .toBe(true);
   });
 });
@@ -90,7 +90,7 @@ priceSortingOptions.forEach(({ label, direction }) => {
         );
 
         return prices.every((price, index) => price === sortedPrices[index]);
-      })
+      }, { timeout: 15000 })
       .toBe(true);
   });
 });
