@@ -48,20 +48,13 @@ nameSortingOptions.forEach(({ label, direction }) => {
       label,
     });
 
-    await expect
-      .poll(async () => {
-        const names = await app.homePage.getProductNames();
-        if (names.length === 0) {
-          return false;
-        }
+    const names = await app.homePage.getProductNames();
 
-        const sortedNames = [...names].sort((a, b) =>
-          direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
-        );
+    const sortedNames = [...names].sort((a, b) =>
+      direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
+    );
 
-        return names.every((name, index) => name === sortedNames[index]);
-      }, { timeout: 15000 })
-      .toBe(true);
+    expect(names).toEqual(sortedNames);
   });
 });
 
@@ -78,20 +71,13 @@ priceSortingOptions.forEach(({ label, direction }) => {
       label,
     });
 
-    await expect
-      .poll(async () => {
-        const prices = await app.homePage.getProductPrices();
-        if (prices.length === 0 || prices.some(Number.isNaN)) {
-          return false;
-        }
+    const prices = await app.homePage.getProductPrices();
 
-        const sortedPrices = [...prices].sort((a, b) =>
-          direction === 'asc' ? a - b : b - a,
-        );
+    const sortedPrices = [...prices].sort((a, b) =>
+      direction === 'asc' ? a - b : b - a,
+    );
 
-        return prices.every((price, index) => price === sortedPrices[index]);
-      }, { timeout: 15000 })
-      .toBe(true);
+    expect(prices).toEqual(sortedPrices);
   });
 });
 

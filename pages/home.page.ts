@@ -40,9 +40,7 @@ export class HomePage {
   async getProductPrices(): Promise<number[]> {
     const prices = await this.prices.allTextContents();
 
-    return prices.map((price: string) =>
-      Number(price.replace(/[^0-9.-]/g, '')),
-    );
+    return prices.map((price: string) => Number(price.replace('€', '').trim()));
   }
 
   async selectPowerTool(tool: string): Promise<void> {
