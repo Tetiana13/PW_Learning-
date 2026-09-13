@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       API_URL: https://api.practicesoftwaretesting.com
+      PASSWORD: ${{ secrets.PASSWORD }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
