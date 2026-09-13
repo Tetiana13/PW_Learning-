@@ -1,5 +1,6 @@
 import { expect, test } from '../fixtures/app.fixtures';
 import { PowerTools } from '../data/categories';
+import { mockedProducts } from '../mocks/products.mock';
 
 test('Verify user can view product details', async ({ app }) => {
   const productName = 'Combination Pliers';
@@ -44,17 +45,19 @@ nameSortingOptions.forEach(({ label, direction }) => {
   test(`Verify user can perform sorting by name ${label}`, async ({ app }) => {
     await app.page.goto('/');
 
+    const expectedNames = await app.homePage.getProductNames();
+
     await app.homePage.sideBarFragment.sortDropdown.selectOption({
       label,
     });
 
-    const names = await app.homePage.getProductNames();
-
-    const sortedNames = [...names].sort((a, b) =>
-      direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
+    await expect.poll(async () => {
+      return app.homePage.getProductNames();
+    }).toEqual(
+      [...expectedNames].sort((a, b) =>
+        direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
+      ),
     );
-
-    expect(names).toEqual(sortedNames);
   });
 });
 
@@ -89,4 +92,28 @@ test('Verify user can filter products by category', async ({ app }) => {
     const productNames = await app.homePage.getProductNames();
     return productNames.every((name) => name.includes(PowerTools.Sander));
   }).toBeTruthy();
+});
+
+test('Verify returned 20 mocked products from API', async ({ app }) => {
+  await app.page.route(
+    'https://api.practicesoftwaretesting.com/products*',
+    async (route) => {
+      const response = await route.fetch();
+      await route.fulfill({
+        response,
+        json: {
+          current_page: 1,
+          data: mockedProducts,
+          from: 1,
+          last_page: 1,
+          per_page: 20,
+          to: 20,
+          total: 20,
+        },
+      });
+    },
+  );
+
+  await app.page.goto('/');
+  await expect.poll(() => app.homePage.getProductNames()).toHaveLength(20);
 });
