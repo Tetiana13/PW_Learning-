@@ -3,7 +3,6 @@ import { App } from '../pages/app';
 import { users } from '../data/auth';
 import { performApiLoginRequest } from '../api/login.api';
 
-
 type Fixtures = {
   app: App;
   loggedInApp: App;

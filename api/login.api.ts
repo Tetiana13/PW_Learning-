@@ -21,7 +21,7 @@ export async function performApiLoginRequest(
             email: user.email,
             password: user.password,
             },
-        },  
+        },
     );
     expect(response.ok()).toBeTruthy();
         const jsonData = (await response.json()) as LoginResponse;
