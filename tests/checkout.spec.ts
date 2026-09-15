@@ -2,8 +2,6 @@ import { Country } from '../data/countries';
 import { expect, test } from '../fixtures/app.fixtures';
 import { PaymentMethod } from '../data/payment';
 
-test.skip(!!process.env.CI, 'Skip on CI due to Cloudflare verification');
-
 test('Successful payment with credit card', async ({ loggedInApp }) => {
   await loggedInApp.page.goto('/');
 

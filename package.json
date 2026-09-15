@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Tetiana13/PW_Learning-#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@faker-js/faker": "^10.6.0",
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.2.0",
     "@typescript-eslint/eslint-plugin": "^8.67.0",
@@ -30,5 +31,8 @@
     "globals": "^17.11.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.67.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }

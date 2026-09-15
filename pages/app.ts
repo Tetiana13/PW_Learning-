@@ -21,4 +21,10 @@ export class App {
     this.checkoutPage = new CheckoutPage(page);
     this.productDetailsPage = new ProductDetailsPage(page);
   }
+
+  async setAuthToken ( token: string) {
+     await this.page.addInitScript((token) => {
+      localStorage.setItem('auth-token', token);
+    }, token);
+  }
 }
