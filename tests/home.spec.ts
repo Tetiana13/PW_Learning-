@@ -2,7 +2,7 @@ import { expect, test } from '../fixtures/app.fixtures';
 import { PowerTools } from '../data/categories';
 import { mockedProducts } from '../mocks/products.mock';
 
-test('Verify user can view product details', async ({ app }) => {
+test('Verify user can view product details', { tag: ['@smoke', '@regression'] }, async ({ app }) => {
   const productName = 'Combination Pliers';
 
   await app.page.goto('/');
@@ -14,7 +14,7 @@ test('Verify user can view product details', async ({ app }) => {
   await expect(app.productDetailsPage.addToFavoriteButton).toBeVisible();
 });
 
-test('Verify user can add product to cart', async ({ app }) => {
+test('Verify user can add product to cart', { tag: ['@smoke', '@regression'] }, async ({ app }) => {
   const productName = 'Slip Joint Pliers';
 
   await app.page.goto('/');
@@ -42,7 +42,7 @@ const nameSortingOptions = [
 ];
 
 nameSortingOptions.forEach(({ label, direction }) => {
-  test(`Verify user can perform sorting by name ${label}`, async ({ app }) => {
+  test(`Verify user can perform sorting by name ${label}`, { tag: '@regression' }, async ({ app }) => {
     await app.page.goto('/');
 
     const expectedNames = await app.homePage.getProductNames();
@@ -67,7 +67,7 @@ const priceSortingOptions = [
 ];
 
 priceSortingOptions.forEach(({ label, direction }) => {
-  test(`Verify user can perform sorting by price ${label}`, async ({ app }) => {
+  test(`Verify user can perform sorting by price ${label}`, { tag: '@regression' }, async ({ app }) => {
     await app.page.goto('/');
 
     await app.homePage.sideBarFragment.sortDropdown.selectOption({
@@ -84,7 +84,7 @@ priceSortingOptions.forEach(({ label, direction }) => {
   });
 });
 
-test('Verify user can filter products by category', async ({ app }) => {
+test('Verify user can filter products by category', { tag: '@regression' }, async ({ app }) => {
   await app.page.goto('/');
   await app.homePage.selectPowerTool(PowerTools.Sander);
 
@@ -94,7 +94,7 @@ test('Verify user can filter products by category', async ({ app }) => {
   }).toBeTruthy();
 });
 
-test('Verify returned 20 mocked products from API', async ({ app }) => {
+test('Verify returned 20 mocked products from API', { tag: '@regression' }, async ({ app }) => {
   await app.page.route(
     'https://api.practicesoftwaretesting.com/products*',
     async (route) => {

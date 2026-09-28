@@ -2,7 +2,7 @@ import { Country } from '../data/countries';
 import { expect, test } from '../fixtures/app.fixtures';
 import { PaymentMethod } from '../data/payment';
 
-test('Successful payment with credit card', async ({ loggedInApp }) => {
+test('Successful payment with credit card', { tag: '@regression' }, async ({ loggedInApp }) => {
   await loggedInApp.page.goto('/');
 
   await expect(loggedInApp.page).toHaveURL('/');

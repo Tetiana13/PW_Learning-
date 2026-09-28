@@ -1,6 +1,6 @@
 import { expect, test } from '../fixtures/app.fixtures';
 
-test('Login with valid credentials', async ({ loggedInApp }) => {
+test('Login with valid credentials', { tag: ['@smoke', '@regression'] }, async ({ loggedInApp }) => {
   await loggedInApp.page.goto('/account');
 
   await expect(loggedInApp.page).toHaveURL('/account');
