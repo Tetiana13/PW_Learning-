@@ -3,6 +3,11 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const baseURL = process.env.BASE_URL;
+if (!baseURL) {
+  throw new Error('BASE_URL environment variable is required');
+}
+
 /**
 * See https://playwright.dev/docs/test-configuration.
 */
@@ -17,12 +22,21 @@ export default defineConfig({
  /* Opt out of parallel tests on CI. */
  workers: process.env.CI ? 1 : undefined,
  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
- reporter: 'html',
+ reporter: [
+   ['html'],
+   ['dot'],
+   ['json', { outputFile: 'test-results/results.json' }],
+ ],
 
  use: {
-   baseURL: 'https://practicesoftwaretesting.com',
+   baseURL,
    headless: true,
    testIdAttribute: 'data-test',
+   screenshot: 'only-on-failure',
+  // Record trace only when retrying a test for the first time.
+  trace: 'on-first-retry',
+  // Record video only when retrying a test for the first time.
+  video: 'on-first-retry'
  },
 
  /* Configure projects for major browsers */

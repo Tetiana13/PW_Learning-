@@ -2,38 +2,47 @@ import { expect, test } from '../fixtures/app.fixtures';
 import { PowerTools } from '../data/categories';
 import { mockedProducts } from '../mocks/products.mock';
 
-test('Verify user can view product details', async ({ app }) => {
+test('Verify user can view product details', { tag: ['@smoke', '@regression'] }, async ({ app }) => {
   const productName = 'Combination Pliers';
 
-  await app.page.goto('/');
-  await app.homePage.selectProduct(productName);
-  await expect(app.page).toHaveURL(/product/);
-  await expect(app.productDetailsPage.productName).toHaveText(productName);
-  await expect(app.productDetailsPage.productPrice).toHaveText('14.15');
-  await expect(app.productDetailsPage.addToCartButton).toBeVisible();
-  await expect(app.productDetailsPage.addToFavoriteButton).toBeVisible();
+  await test.step('Open product details', async () => {
+    await app.page.goto('/');
+    await app.homePage.selectProduct(productName);
+  });
+
+  await test.step('Verify product details and available actions', async () => {
+    await expect(app.page).toHaveURL(/product/);
+    await expect(app.productDetailsPage.productName).toHaveText(productName);
+    await expect(app.productDetailsPage.productPrice).toHaveText('14.15');
+    await expect(app.productDetailsPage.addToCartButton).toBeVisible();
+    await expect(app.productDetailsPage.addToFavoriteButton).toBeVisible();
+  });
 });
 
-test('Verify user can add product to cart', async ({ app }) => {
+test('Verify user can add product to cart', { tag: ['@smoke', '@regression'] }, async ({ app }) => {
   const productName = 'Slip Joint Pliers';
 
-  await app.page.goto('/');
-  await app.homePage.selectProduct(productName);
-  await expect(app.productDetailsPage.productName).toHaveText(productName);
-  await expect(app.productDetailsPage.productPrice).toHaveText('9.17');
-  await app.productDetailsPage.addToCartButton.click();
+  await test.step('Add selected product to the cart', async () => {
+    await app.page.goto('/');
+    await app.homePage.selectProduct(productName);
+    await expect(app.productDetailsPage.productName).toHaveText(productName);
+    await expect(app.productDetailsPage.productPrice).toHaveText('9.17');
+    await app.productDetailsPage.addToCartButton.click();
 
-  await expect(app.productDetailsPage.addToCartNotification).toHaveText(
-    'Product added to shopping cart.',
-  );
-  await expect(app.productDetailsPage.addToCartNotification).toBeHidden({ timeout: 8000 });
-  await expect(app.productDetailsPage.headerFragment.cartQuantity).toHaveText('1');
-  await app.productDetailsPage.headerFragment.cartButton.click();
-  await expect(app.page).toHaveURL('/checkout');
+    await expect(app.productDetailsPage.addToCartNotification).toHaveText(
+      'Product added to shopping cart.',
+    );
+    await expect(app.productDetailsPage.addToCartNotification).toBeHidden({ timeout: 8000 });
+    await expect(app.productDetailsPage.headerFragment.cartQuantity).toHaveText('1');
+  });
 
-  await app.checkoutPage.verifyProductQuantity(productName, 1);
-  await expect(app.checkoutPage.proceedToCheckoutButton).toBeVisible();
-  await expect(app.checkoutPage.proceedToCheckoutButton).toBeEnabled();
+  await test.step('Verify cart contents and checkout availability', async () => {
+    await app.productDetailsPage.headerFragment.cartButton.click();
+    await expect(app.page).toHaveURL('/checkout');
+    await app.checkoutPage.verifyProductQuantity(productName, 1);
+    await expect(app.checkoutPage.proceedToCheckoutButton).toBeVisible();
+    await expect(app.checkoutPage.proceedToCheckoutButton).toBeEnabled();
+  });
 });
 
 const nameSortingOptions = [
@@ -42,22 +51,20 @@ const nameSortingOptions = [
 ];
 
 nameSortingOptions.forEach(({ label, direction }) => {
-  test(`Verify user can perform sorting by name ${label}`, async ({ app }) => {
-    await app.page.goto('/');
+  test(`Verify user can perform sorting by name ${label}`, { tag: '@regression' }, async ({ app }) => {
+    await test.step(`Sort products by ${label}`, async () => {
+      await app.page.goto('/');
+      const expectedNames = await app.homePage.getProductNames();
+      await app.homePage.sideBarFragment.sortDropdown.selectOption({ label });
 
-    const expectedNames = await app.homePage.getProductNames();
-
-    await app.homePage.sideBarFragment.sortDropdown.selectOption({
-      label,
+      await expect.poll(async () => {
+        return app.homePage.getProductNames();
+      }).toEqual(
+        [...expectedNames].sort((a, b) =>
+          direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
+        ),
+      );
     });
-
-    await expect.poll(async () => {
-      return app.homePage.getProductNames();
-    }).toEqual(
-      [...expectedNames].sort((a, b) =>
-        direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
-      ),
-    );
   });
 });
 
@@ -67,53 +74,57 @@ const priceSortingOptions = [
 ];
 
 priceSortingOptions.forEach(({ label, direction }) => {
-  test(`Verify user can perform sorting by price ${label}`, async ({ app }) => {
-    await app.page.goto('/');
+  test(`Verify user can perform sorting by price ${label}`, { tag: '@regression' }, async ({ app }) => {
+    await test.step(`Sort products by ${label}`, async () => {
+      await app.page.goto('/');
+      await app.homePage.sideBarFragment.sortDropdown.selectOption({ label });
 
-    await app.homePage.sideBarFragment.sortDropdown.selectOption({
-      label,
+      const prices = await app.homePage.getProductPrices();
+      const sortedPrices = [...prices].sort((a, b) =>
+        direction === 'asc' ? a - b : b - a,
+      );
+
+      expect(prices).toEqual(sortedPrices);
     });
-
-    const prices = await app.homePage.getProductPrices();
-
-    const sortedPrices = [...prices].sort((a, b) =>
-      direction === 'asc' ? a - b : b - a,
-    );
-
-    expect(prices).toEqual(sortedPrices);
   });
 });
 
-test('Verify user can filter products by category', async ({ app }) => {
-  await app.page.goto('/');
-  await app.homePage.selectPowerTool(PowerTools.Sander);
+test('Verify user can filter products by category', { tag: '@regression' }, async ({ app }) => {
+  await test.step(`Filter products by ${PowerTools.Sander}`, async () => {
+    await app.page.goto('/');
+    await app.homePage.selectPowerTool(PowerTools.Sander);
 
-  await expect.poll(async () => {
-    const productNames = await app.homePage.getProductNames();
-    return productNames.every((name) => name.includes(PowerTools.Sander));
-  }).toBeTruthy();
+    await expect.poll(async () => {
+      const productNames = await app.homePage.getProductNames();
+      return productNames.every((name) => name.includes(PowerTools.Sander));
+    }).toBeTruthy();
+  });
 });
 
-test('Verify returned 20 mocked products from API', async ({ app }) => {
-  await app.page.route(
-    'https://api.practicesoftwaretesting.com/products*',
-    async (route) => {
-      const response = await route.fetch();
-      await route.fulfill({
-        response,
-        json: {
-          current_page: 1,
-          data: mockedProducts,
-          from: 1,
-          last_page: 1,
-          per_page: 20,
-          to: 20,
-          total: 20,
-        },
-      });
-    },
-  );
+test('Verify returned 20 mocked products from API', { tag: '@regression' }, async ({ app }) => {
+  await test.step('Mock products API response', async () => {
+    await app.page.route(
+      'https://api.practicesoftwaretesting.com/products*',
+      async (route) => {
+        const response = await route.fetch();
+        await route.fulfill({
+          response,
+          json: {
+            current_page: 1,
+            data: mockedProducts,
+            from: 1,
+            last_page: 1,
+            per_page: 20,
+            to: 20,
+            total: 20,
+          },
+        });
+      },
+    );
+  });
 
-  await app.page.goto('/');
-  await expect.poll(() => app.homePage.getProductNames()).toHaveLength(20);
+  await test.step('Verify the product list contains 20 mocked products', async () => {
+    await app.page.goto('/');
+    await expect.poll(() => app.homePage.getProductNames()).toHaveLength(20);
+  });
 });

@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       API_URL: https://api.practicesoftwaretesting.com
+      BASE_URL: ${{ vars.BASE_URL }}
+      USER_NAME: ${{ vars.USER_NAME }}
+      EMAIL: ${{ secrets.EMAIL }}
       PASSWORD: ${{ secrets.PASSWORD }}
     steps:
     - uses: actions/checkout@v4
@@ -26,5 +29,7 @@ jobs:
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
-        path: playwright-report/
+        path: |
+          playwright-report/
+          test-results/results.json
         retention-days: 30
